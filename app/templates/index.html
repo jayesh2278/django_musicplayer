@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <title>
+        CodePen - Flat music player
+    </title>
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.7/mediaelementplayer.min.css"
+        rel="stylesheet" />
+    <link href="{% static './juhu.css' %}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <!-- partial:index.partial.html -->
+    <html>
+
+    <head>
+        <meta charset="utf-8" />
+        <title>
+            Flat music player
+        </title>
+    </head>
+
+    <body>
+        <div class="contain">
+            <div class="container">
+                <div class="music-player">
+                    {% for item in page_obj %}
+                    <div class="cover">
+                        <img alt="" src="{{item.image.url}}" height="300px" width="500px">
+                    </div>
+                    <div class="titre">
+                        <h3>
+                            {{item.artist}}
+                        </h3>
+                        <h1>
+                            {{item.title}}
+                            {{item.id}}
+                        </h1>
+                    </div>
+
+                    <center>
+                        {% if page_obj.has_previous %}
+                        <button id="previous_button">previous</button>
+                        {% else %}
+                        <button disabled>Prvious</button>
+                        {% endif %}
+
+                        <!-- {% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }} {% else %}?page={{ page_obj.4 }} {% endif %} -->
+                        <!-- <a id="previous"><i class="fa fa-step-backward fa-2x"></i></a> &nbsp; &nbsp; &nbsp; -->
+
+                        {% if page_obj.has_next %}
+                        <button id="next_button">Next</button>
+                        {% else %}
+                        <button disabled>Next</button>
+                        {% endif %}
+
+
+                        <!-- #{% if page_obj.has_next %}?page={{ page_obj.next_page_number }} {% else %}?page={{ page_obj.1 }}{% endif %}
+        <a class="cnext" href=""><i class="fa fa-step-forward fa-2x"></i></a> -->
+                    </center>
+
+                    <center>
+                        <div class="lecteur">
+                            <audio class="fc-media" style="width: 100%;" controls autoplay>
+                                <source
+                                    src="{% if item.audio_file %}{{item.audio_file.url}} {% else %} {{item.audio_link}} {% endif %}"
+                                    type="audio/mp3" />
+                            </audio>
+                    </center>
+
+
+                    <div style="margin-left: 45px;">
+
+                        <form id="myform" action="{% url 'app:abcd' item.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="skip">
+                        </form>
+                        {% if skipcount %}
+                        <span>{{skipcount}}</span>
+                        {% endif %}}
+                    </div>
+
+
+
+
+                    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#next_button").click(function () {
+            "{% if page_obj.has_next %}" 
+            var page = "{{ page_obj.next_page_number }}";
+              "{% endif %}"
+            $.ajax({
+                type: "GET",
+                url: './',
+                data: {
+                  page: page
+                },
+                success: function (page) {
+                  console.log(page)
+                  $("body").html(page);
+                      },                
+                  });
+                });
+              });
+            
+            $("#previous_button").click(function () {
+                 "{% if page_obj.has_previous %}" 
+                var page = "{{ page_obj.previous_page_number }}";
+                "{% endif %}"
+                $.ajax({
+                  type: "GET",
+                  url: './',
+                  data: {
+                    page: page
+                  },
+                  success: function (page) {
+                    console.log(page)
+                    $("body").html(page);
+                  },
+                });
+              });
+                
+
+          
+          // var clicks = 0;
+          //   function onClick() {
+          //     if (typeof (Storage) !== "undefined") {
+          //       if (localStorage.clickcount) {
+          //         localStorage.clickcount = Number(localStorage.clickcount) + 1;
+          //       } 
+          //       else {
+          //         localStorage.clickcount = 1;
+          //       }
+          //       document.getElementById("result").innerHTML = localStorage.clickcount ;}
+          //       if (localStorage.clickcount == 3) {  
+          //       document.getElementsByClassName("cnext")[0].click();
+          //       localStorage.clear();
+          //     }
+          //     };
+                
+           
+                    </script>
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
+    </body>
+
+    </html>
+    <!-- partial -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.7/mediaelement-and-player.min.js">
+    </script>
+    <script src="{% static './script.js' %}">
+    </script>
+
+
+</body>
+
+</html>

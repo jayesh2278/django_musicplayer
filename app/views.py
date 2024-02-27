@@ -9,7 +9,7 @@ from .models import Song
 from django.core.cache import cache
 import redis
 from django.conf import settings
-import random
+import secrets
 
 
 def index(request):
@@ -45,7 +45,7 @@ def coml(request,id):
         # print "returning REMOTE_ADDR"
         ip = request.META.get('REMOTE_ADDR')
     print(ip)
-    number = random.randint(0,255)
+    number = secrets.SystemRandom().randint(0,255)
     ip = f'192.168.0.{number}'
     # 
     # redis operations
